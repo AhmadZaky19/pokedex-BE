@@ -29,4 +29,18 @@ module.exports = {
         }
       );
     }),
+  getPokemonDetailById: (id) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT * FROM pokemon WHERE id = ?",
+        id,
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL: ${error.sqlMassage}`));
+          }
+        }
+      );
+    }),
 };
