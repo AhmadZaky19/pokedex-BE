@@ -43,6 +43,24 @@ module.exports = {
         }
       );
     }),
+  updatePokedex: (data, id) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE pokedex SET ? WHERE id = ?",
+        [data, id],
+        (error) => {
+          if (!error) {
+            const newResult = {
+              id,
+              ...data,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
   deletePokedex: (name) =>
     new Promise((resolve, reject) => {
       connection.query("DELETE FROM pokedex WHERE name = ?", name, (error) => {

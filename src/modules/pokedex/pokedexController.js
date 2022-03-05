@@ -53,6 +53,34 @@ module.exports = {
       );
     }
   },
+  updatePokedex: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await pokedexModel.getPokedexById(id);
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `Pokedex by id ${id} not found !`,
+          null
+        );
+      }
+      const { name } = req.body;
+      const setData = {
+        name,
+        updatedAt: new Date(Date.now()),
+      };
+      const result = await pokedexModel.updatePokedex(setData, id);
+      return helperWrapper.response(res, 200, "Success update pokedex", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
   deletePokedex: async (req, res) => {
     try {
       const { name } = req.params;
