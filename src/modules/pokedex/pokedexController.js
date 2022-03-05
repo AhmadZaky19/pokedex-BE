@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const { v4: uuidv4 } = require("uuid");
 const helperWrapper = require("../../helpers/wrapper");
 const pokedexModel = require("./pokedexModel");
@@ -28,6 +29,21 @@ module.exports = {
       const result = await pokedexModel.createPokedex(setData);
 
       return helperWrapper.response(res, 200, "Success create pokedex", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  getPokedexById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await pokedexModel.getPokedexById(id);
+
+      return helperWrapper.response(res, 200, "Success get pokedex", result);
     } catch (error) {
       return helperWrapper.response(
         res,
