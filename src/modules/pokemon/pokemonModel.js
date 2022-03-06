@@ -15,6 +15,39 @@ module.exports = {
         }
       });
     }),
+  getPokemon: (id, search, limit, offset) =>
+    new Promise((resolve, reject) => {
+      const lala = connection.query(
+        `SELECT * FROM pokemon WHERE ${
+          id ? `id = '${id}' AND` : ""
+        } name LIKE ? LIMIT ? OFFSET ?`,
+        [`%${search}%`, limit, offset],
+        (error, result) => {
+          if (!error) {
+            resolve(result);
+          } else {
+            reject(new Error(`SQL: ${error.sqlMassage}`));
+          }
+        }
+      );
+      console.log(lala);
+    }),
+  getCountPokemon: (id, search) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT COUNT (*) AS total FROM pokemon WHERE ${
+          id ? `id = '${id}' AND` : ""
+        } name LIKE ?`,
+        [`%${search}%`],
+        (error, result) => {
+          if (!error) {
+            resolve(result[0].total);
+          } else {
+            reject(new Error(`SQL: ${error.sqlMassage}`));
+          }
+        }
+      );
+    }),
   getPokemonByName: (name) =>
     new Promise((resolve, reject) => {
       connection.query(

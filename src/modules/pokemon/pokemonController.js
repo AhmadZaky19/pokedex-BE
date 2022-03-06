@@ -38,10 +38,49 @@ module.exports = {
       );
     }
   },
+  getPokemon: async (req, res) => {
+    try {
+      let { id, search, page, limit } = req.query;
+      id = id || "";
+      search = search || "";
+      page = Number(page) || 1;
+      limit = Number(limit) || 3;
+      const offset = page * limit - limit;
+      const totalData = await pokemonModel.getCountPokemon(id, search);
+      const totalPage = Math.ceil(totalData / limit);
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData,
+      };
+      const result = await pokemonModel.getPokemon(id, search, limit, offset);
+      if (result.length < 1) {
+        return helperWrapper.response(res, 200, "Pokemon not found", result);
+      }
+      if (page > totalPage) {
+        return helperWrapper.response(res, 400, "Page not found", null);
+      }
+      return helperWrapper.response(
+        res,
+        200,
+        "Success get pokemon",
+        result,
+        pageInfo
+      );
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
   getPokemonDetailById: async (req, res) => {
     try {
       const { id } = req.params;
-      const result = await pokemonModel.getPokemonById(id);
+      const result = await pokemonModel.getPokemonDetailById(id);
       if (result.length < 1) {
         return helperWrapper.response(
           res,
