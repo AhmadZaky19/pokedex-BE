@@ -17,7 +17,7 @@ module.exports = {
     }),
   getPokemon: (id, search, limit, offset) =>
     new Promise((resolve, reject) => {
-      const lala = connection.query(
+      connection.query(
         `SELECT * FROM pokemon WHERE ${
           id ? `id = '${id}' AND` : ""
         } name LIKE ? LIMIT ? OFFSET ?`,
@@ -30,7 +30,6 @@ module.exports = {
           }
         }
       );
-      console.log(lala);
     }),
   getCountPokemon: (id, search) =>
     new Promise((resolve, reject) => {
